@@ -9,7 +9,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-const serverUrl = "http://localhost:3000";
+const serverUrl = "https://nalum.onrender.com";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
