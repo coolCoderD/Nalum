@@ -38,12 +38,25 @@ const createJob = async (req, res) => {
 // Get all jobs posted by a specific recruiter
 const getJobsByRecruiter = async (req, res) => {
   try {
-      const { recruiterId } = req.params;
-      console.log(recruiterId);
-      const jobs = await Job.find({ recruiter: recruiterId });
-      res.status(200).json({ message: "Jobs by recruiter", jobs });
+    const { recruiterId } = req.params;
+    console.log(recruiterId);
+
+    // Populate recruiter information including companyName
+    const jobs = await Job.find({ recruiter: recruiterId }).populate({
+      path: 'recruiter', // Assuming recruiter is the reference field in Job
+      select: 'companyName name', // Include fields you want, like companyName or recruiter's name
+    });
+
+    // Map jobs to include recruiter details directly in the response
+    const formattedJobs = jobs.map(job => ({
+      ...job.toObject(),
+      recruiterName: job.recruiter?.name || 'Unknown', // If recruiter's name is available
+      companyName: job.recruiter?.companyName || 'Unknown Company',
+    }));
+
+    res.status(200).json({ message: "Jobs by recruiter", jobs: formattedJobs });
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
