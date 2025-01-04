@@ -11,18 +11,19 @@ export function Header() {
   return (
     <header className="border-b border-gray-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <Briefcase className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold">Alumni Jobs</span>
+        <div className="flex  h-16 items-center justify-between">
+          <Link to="/" className="flex items-center justify-center space-x-2">
+            <Briefcase className="h-8 w-8 text-primaryRed" />
+            <span className="text-xl font-bold">Nalum</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-4">
+          <nav className="flex items-center space-x-4">
             {user ? (
               <>
+              <div className='hidden md:block'>
 <Link
   to={user.role === 'candidate' ? '/dashboard' : '/recruiter'}
-  className="flex items-center space-x-2 text-gray-900 hover:text-blue-600 transition-all duration-200 ease-in-out p-2 rounded-md hover:bg-gray-200"
+  className="flex items-center space-x-2 text-gray-900 hover:text-primaryRed transition-all duration-200 ease-in-out p-2 rounded-md hover:bg-gray-200"
 >
 
   <span className="text-md font-medium">
@@ -31,6 +32,7 @@ export function Header() {
       : `Hello 👋, ${user.name}! Ready to post some exciting jobs?`}
   </span>
 </Link>
+</div>
 
 
                 <Button onClick={logout} variant="secondary">

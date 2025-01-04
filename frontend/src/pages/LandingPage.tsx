@@ -11,25 +11,25 @@ export function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center lg:pt-32">
           <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">
             Connect{' '}
-            <span className="relative whitespace-nowrap text-blue-600">
+            <span className="relative whitespace-nowrap text-primaryRed">
               <span className="relative">Alumni Talent</span>
             </span>{' '}
             with Dream Opportunities
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700">
-            Your gateway to exclusive job opportunities and top talent from your alma mater.
+            Your gateway to exclusive job opportunities and top talent.
             Join our community of successful professionals and leading companies.
           </p>
           <div className="mt-10 flex justify-center gap-x-6">
             <Link to="/register?role=candidate">
               <Button size="lg" className="group">
-                <UserCircle className="mr-2 h-5 w-5" />
+                <UserCircle className="hidden md:block mr-2 h-5 w-5" />
                 Join as Candidate
               </Button>
             </Link>
             <Link to="/register?role=recruiter">
               <Button size="lg" variant="outline" className="group">
-                <Building2 className="mr-2 h-5 w-5" />
+                <Building2  className="hidden md:block mr-2 h-5 w-5" />
                 Join as Recruiter
               </Button>
             </Link>
@@ -49,14 +49,14 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 ">
             {features.map((feature) => (
               <div
                 key={feature.name}
                 className="relative rounded-2xl border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="absolute -top-4 left-4">
-                  <span className="inline-flex rounded-lg bg-blue-600 p-3 text-white shadow-lg">
+                  <span className="inline-flex rounded-lg bg-primaryRed p-4 text-white shadow-lg">
                     {feature.icon}
                   </span>
                 </div>

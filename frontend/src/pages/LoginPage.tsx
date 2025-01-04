@@ -49,7 +49,7 @@ export function LoginPage() {
           role: user.role,
         });
   
-        navigate('/dashboard'); // Navigate to dashboard on successful login
+        navigate(user.role === 'candidate' ? '/dashboard' : '/recruiter');
       } else {
         console.error('Login failed: Invalid response');
       }
