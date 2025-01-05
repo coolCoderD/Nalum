@@ -13,7 +13,7 @@ const {
 
 router.post('/jobs',createJob);
 router.get('/jobs',getAllJobs);
-router.get('/jobs/:recruiterId',getJobsByRecruiter);
+router.get('/jobs/recruiter/:recruiterId',getJobsByRecruiter);
 router.get('/jobs/:jobId',getJobById);
 router.put('/jobs/:jobId',updateJob);
 router.delete('/jobs/:jobId',deleteJob);

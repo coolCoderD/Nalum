@@ -8,7 +8,7 @@ const User = require('../model/User');
 //Create a new job 
 const createJob = async (req, res) => {
   try {
-      const { recruiterId, title, description, location, skills, salaryRange, deadline } = req.body;
+      const { recruiterId, title, description, location, skills, salaryRange, deadline,jobLocationType } = req.body;
       
       const recruiter = await User.findById(recruiterId);
       if (!recruiter || recruiter.role !== 'recruiter') {
@@ -24,7 +24,8 @@ const createJob = async (req, res) => {
           salaryRange,
           deadline,
           postedBy: recruiterId, 
-          status: 'Active'
+          status: 'active',
+          jobLocationType
       });
 
       const savedJob = await job.save();
