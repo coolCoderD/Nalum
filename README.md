@@ -6,33 +6,6 @@ A modern, recruitment section to bridge career opportunities and job seekers, ta
 ## Deployed Link
 You can access the deployed website here: [**Nalum Recruitment Section**](https://nalum-iota.vercel.app/)
 
-
-## Features
-
-### For Candidates
-- 🔍 **Advanced job search** with filters specific to needs
-- 🔔 **Real-time notifications** on job updates and application statuses
-- 💼 **Profile management** with CV and skills integration
-- 📊 **Application tracking**: Track the status of job applications and receive real-time updates
-- 👀 **View jobs from different recruiters**: Browse listings posted by various recruiters, giving access to a wide range of opportunities
-- 🎯 **Search and apply**: Easily search for jobs and apply with a single click
-
-### For Recruiters
-- ✨ **Intuitive job posting interface** designed focused roles
-- 📈 **Application tracking system** for managing candidate flow
-- 📊 **Analytics dashboard** to assess applications and track recruitment metrics
-- 📬 **Built-in messaging system** for direct communication with applicants
-
-### Authentication
-- 🔑 **Role-based authentication** (Candidate/Recruiter)
-- 🔒 **Protected routes** for both frontend and backend
-- 🔄 **Persistent sessions** for a seamless user experience
-
-### Job Management
-- 📝 **Comprehensive job posting form** with rich text editing for descriptions
-- ➡️ **Multi-step application process** for candidates to apply easily
-- 📊 **Application status tracking** for both candidates and recruiters
-
 ## Tech Stack
 
 ### Frontend
@@ -99,3 +72,31 @@ You can access the deployed website here: [**Nalum Recruitment Section**](https:
 </div>
 
 
+
+
+
+## Features
+
+### For Candidates
+- 🔍 **Advanced job search** with filters specific to needs
+- 🔔 **Real-time notifications** on job updates and application statuses
+- 💼 **Profile management** with CV and skills integration
+- 📊 **Application tracking**: Track the status of job applications and receive real-time updates
+- 👀 **View jobs from different recruiters**: Browse listings posted by various recruiters, giving access to a wide range of opportunities
+- 🎯 **Search and apply**: Easily search for jobs and apply with a single click
+
+### For Recruiters
+- ✨ **Intuitive job posting interface** designed focused roles
+- 📈 **Application tracking system** for managing candidate flow
+- 📊 **Analytics dashboard** to assess applications and track recruitment metrics
+- 📬 **Built-in messaging system** for direct communication with applicants
+
+### Authentication
+- 🔑 **Role-based authentication** (Candidate/Recruiter)
+- 🔒 **Protected routes** for both frontend and backend
+- 🔄 **Persistent sessions** for a seamless user experience
+
+### Job Management
+- 📝 **Comprehensive job posting form** with rich text editing for descriptions
+- ➡️ **Multi-step application process** for candidates to apply easily
+- 📊 **Application status tracking** for both candidates and recruiters
