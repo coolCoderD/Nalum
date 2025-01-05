@@ -1,7 +1,7 @@
 
 # Nalum Recruitment Section
 
-A modern, recruitment section to bridge career opportunities and job seekers, tailored for NSUT. Built with React, TypeScript, and Tailwind CSS for the frontend, and Express, Node.js, and MongoDB for the backend, it offers a seamless experience for both candidates and recruiters.
+A modern recruitment section to bridge career opportunities and job seekers, tailored for NSUT. Built with React, TypeScript, and Tailwind CSS for the frontend, and Express, Node.js, and MongoDB for the backend, it offers a seamless experience for both candidates and recruiters.
 
 ## Deployed Link
 You can access the deployed website here: [**Nalum Recruitment Section**](https://nalum-iota.vercel.app/)
