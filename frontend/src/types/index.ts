@@ -24,6 +24,7 @@ export interface Job {
   recruiterId: string;
   status: 'active' | 'closed';
   postedBy: string;
+  jobLocationType: 'remote' | 'hybrid' | 'onsite';
 }
 
 export interface Application {

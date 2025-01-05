@@ -37,7 +37,7 @@ export function RegisterPage() {
       ...data,
       role,
     };
-    console.log(dataWithRole);
+    // console.log(dataWithRole);
   
     try {
       const res = await axios.post(

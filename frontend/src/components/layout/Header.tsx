@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export function Header() {
   const { user, logout } = useAuth();
-  console.log(user?.id)
+  // console.log(user?.id)
 
   return (
     <header className="border-b border-gray-200 bg-white">

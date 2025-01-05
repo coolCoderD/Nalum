@@ -31,8 +31,8 @@ export function JobFilters({ onFilterChange }: JobFiltersProps) {
   };
 
   return (
-    <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4">
-      <div className="relative">
+    <div className="space-y-4  rounded-lg border border-gray-200 bg-white p-4">
+      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4">
         <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
         <Input
           name="search"
@@ -41,16 +41,17 @@ export function JobFilters({ onFilterChange }: JobFiltersProps) {
           onChange={handleChange}
           className="pl-10"
         />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Input
+                <Input
           name="location"
           placeholder="Location"
           value={filters.location}
           onChange={handleChange}
         />
-<Input
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+{/* <Input
   name="salaryMin"
   type="text"
   placeholder="Min Salary"
@@ -64,7 +65,7 @@ export function JobFilters({ onFilterChange }: JobFiltersProps) {
   placeholder="Max Salary"
   value={filters.salaryMax}
   onChange={(e) => handleChange(e, /^[0-9]*$/)}
-/>
+/> */}
 
       </div>
     </div>

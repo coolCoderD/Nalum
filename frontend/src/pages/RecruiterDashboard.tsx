@@ -43,13 +43,17 @@ export function RecruiterDashboard() {
     title: '',
     location: '',
     skills: '',
-    salaryRange: '',
+    minSalary: '',
+    maxSalary: '',
     description: '',
     deadline: '',
+    jobLocationType: '',
   });
+  const [errors, setErrors] = React.useState<Record<string, string>>({});
+
   const fetchJobs=async ()=>{
     try{
-      const response=await axios.get(`${serverUrl}/api/jobs/${user?.id}`);
+      const response=await axios.get(`${serverUrl}/api/jobs/recruiter/${user?.id}`);
       setJobsBackend(response.data.jobs);
       setLoading(false);
     }catch(error){
@@ -61,11 +65,11 @@ export function RecruiterDashboard() {
   useEffect(()=>{
     fetchJobs();
   },[]);
-  console.log(jobsBackend)
+  // console.log(jobsBackend)
   const parseSalaryRange = (salaryRange: string) => {
     const [min, max] = salaryRange.split(' - ').map(s => parseInt(s.replace(/[^0-9]/g, ''), 10));
     return { salaryMin: min, salaryMax: max };
-    const [loading, setLoading] = React.useState(true);
+
   };
   const paresedJobs: Job[] = jobsBackend.map(job => {
     const { salaryMin, salaryMax } = parseSalaryRange(job.salaryRange);
@@ -83,73 +87,136 @@ export function RecruiterDashboard() {
       recruiterId: job.postedBy, // Include the postedBy property
       postedBy: job.postedBy, // Include the postedBy property
       status: job.status.toLowerCase() as 'active' | 'closed',
+      jobLocationType: job.jobLocationType.toLowerCase() as 'remote' | 'hybrid' | 'onsite'
     };
   });;
   
   // Example usage or rendering
   const jobs = paresedJobs.filter(job => job.status === activeTab);
   if (loading) {
-    return <div className="text-center text-gray-700">Loading...</div>;
+    return (
+<div className="flex items-center justify-center min-h-screen bg-gray-100">
+  <div className="text-center text-gray-700">
+    <div className="flex justify-center items-center gap-2 mb-4">
+      <div className="w-4 h-4 rounded-full bg-primaryRed animate-bounce"></div>
+      <div
+        className="w-4 h-4 rounded-full bg-primaryRed animate-bounce [animation-delay:-0.3s]"
+      ></div>
+      <div
+        className="w-4 h-4 rounded-full bg-primaryRed animate-bounce [animation-delay:-0.5s]"
+      ></div>
+    </div>
+    <h1 className="text-2xl font-semibold">Fetching Data</h1>
+  </div>
+</div>
+
+)
   }
 
+
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+  
+    if (!formData.title.trim()) {
+      newErrors.title = 'Job title is required.';
+    } else if (!isNaN(Number(formData.title))) {
+      newErrors.title = 'Job title must not be a number.';
+    }
+  
+    if (!formData.description.trim()) newErrors.description = 'Job description is required.';
+    if (!formData.location.trim()) newErrors.location = 'Location is required.';
+  
+    if (!formData.skills.trim()) {
+      newErrors.skills = 'At least one skill is required.';
+    } else if (!/^[a-zA-Z\s]+(,[a-zA-Z\s]+)*$/.test(formData.skills)) {
+      newErrors.skills = 'Skills must be comma-separated words.';
+    }
+  
+    if (!formData.minSalary.trim() || !formData.maxSalary.trim()) {
+      newErrors.salaryRange = 'Both minimum and maximum salary are required.';
+    } else if (isNaN(Number(formData.minSalary)) || isNaN(Number(formData.maxSalary))) {
+      newErrors.salaryRange = 'Both minimum and maximum salary must be valid numbers.';
+    }
+  
+    const currentDate = new Date().setHours(0, 0, 0, 0); // Current date without time
+    const deadlineDate = new Date(formData.deadline).getTime();
+  
+    if (!formData.deadline.trim()) {
+      newErrors.deadline = 'Valid application deadline is required.';
+    } else if (isNaN(deadlineDate)) {
+      newErrors.deadline = 'Application deadline must be a valid date.';
+    } else if (deadlineDate < currentDate) {
+      newErrors.deadline = 'Application deadline cannot be in the past.';
+    }
+  
+    if (!formData.jobLocationType.trim()) {
+      newErrors.jobLocationType = 'Job location type is required.';
+    }
+  
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setTimeout(() => setErrors({}), 3000); // Clear errors after 3 seconds
+    }
+  
+    return Object.keys(newErrors).length === 0;
+  };
+  
+
+
   const handlePostJob = async () => {
+    if (!validateForm()) return;
+  
     const jobData = {
-      recruiterId: user.id,  // Assuming user ID is stored in localStorage or context
+      recruiterId: user.id,
       title: formData.title,
       description: formData.description,
       location: formData.location,
-      skills: formData.skills.split(',').map(skill => skill.trim()),  // Convert comma-separated string to an array
-      salaryRange: formData.salaryRange,
-      deadline: new Date(formData.deadline).toISOString(),  // Convert date to ISO string
+      skills: formData.skills.split(',').map(skill => skill.trim()),
+      salaryRange: `${formData.minSalary} - ${formData.maxSalary}`,
+      deadline: new Date(formData.deadline).toISOString(),
+      jobLocationType: formData.jobLocationType,
     };
-    console.log('Posting job with data:', jobData);
+  
+    // console.log('Posting job with data:', jobData);
     setLoading(true);
+  
     try {
       const response = await axios.post(`${serverUrl}/api/jobs`, jobData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
-      console.log('Job posted:', response.data);
-      setIsModalOpen(false);  // Close the modal on success
+      // console.log('Job posted:', response.data);
+      setIsModalOpen(false); // Close modal on success
       setLoading(false);
       setFormData({
         title: '',
         location: '',
         skills: '',
-        salaryRange: '',
+        minSalary: '',
+        maxSalary: '',
         description: '',
         deadline: '',
-      })
-      fetchJobs();  
+        jobLocationType: '',
+      });
+      fetchJobs(); // Refresh job listings
     } catch (error) {
       console.error('Error posting job:', error);
       setLoading(false);
     }
   };
   
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">Job Listings</h1>
-          <Button onClick={() => setIsModalOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Post New Job
-          </Button>
-        </div>
-
-
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="p-6 space-y-4">
-  <h2 className="text-xl font-semibold">Post a New Job</h2>
-
+  <DashboardLayout>
+<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
+  title='Post a new job'
+  size='lg'
+  >
+  <div className="p-6 space-y-4">
   <div className="mb-4">
     <label htmlFor="title" className="block text-sm font-medium text-gray-700">
       Job Title
@@ -162,6 +229,7 @@ export function RecruiterDashboard() {
       onChange={handleInputChange}
       className="w-full p-2 border border-gray-300 rounded"
     />
+    {errors.title && <p className="text-red-500 mt-2">{errors.title}</p>}
   </div>
 
   <div className="mb-4">
@@ -174,8 +242,29 @@ export function RecruiterDashboard() {
       placeholder="Location"
       value={formData.location}
       onChange={handleInputChange}
+      required
       className="w-full p-2 border border-gray-300 rounded"
     />
+    {errors.location && <p className="text-red-500 mt-2">{errors.location}</p>}
+  </div>
+  <div>
+  <label htmlFor="locationType" className="block text-sm font-medium text-gray-700">
+  Location Type
+</label>
+<select
+  id="locationType"
+  name="jobLocationType"
+  value={formData.jobLocationType}
+  onChange={handleInputChange}
+  className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primaryRed focus:border-transparent rounded"
+>
+  <option value="" disabled hidden>Select Location Type</option>
+  <option value="remote">Remote</option>
+  <option value="hybrid">Hybrid</option>
+  <option value="onsite">On-site</option>
+</select>
+
+          {errors.jobLocationType && <p className="text-red-500 mt-2">{errors.jobLocationType}</p>}
   </div>
 
   <div className="mb-4">
@@ -190,21 +279,41 @@ export function RecruiterDashboard() {
       onChange={handleInputChange}
       className="w-full p-2 border border-gray-300 rounded"
     />
+    {errors.skills && <p className="text-red-500 mt-2">{errors.skills}</p>}
   </div>
 
+<div className='grid grid-cols-2 gap-5'>
   <div className="mb-4">
-    <label htmlFor="salaryRange" className="block text-sm font-medium text-gray-700">
-      Salary Range
-    </label>
-    <Input
-      id="salaryRange"
-      name="salaryRange"
-      placeholder="Salary Range (e.g., 70,000 - 100,000 USD)"
-      value={formData.salaryRange}
-      onChange={handleInputChange}
-      className="w-full p-2 border border-gray-300 rounded"
-    />
-  </div>
+      <label htmlFor="minSalary" className="block text-sm font-medium text-gray-700">
+        Minimum Salary
+      </label>
+      <Input
+        id="minSalary"
+        name="minSalary"
+        placeholder="Minimum Salary (e.g., 70000)"
+        value={formData.minSalary}
+        onChange={handleInputChange}
+        className="w-full p-2 border border-gray-300 rounded"
+      />
+    </div>
+
+    <div className="mb-4">
+      <label htmlFor="maxSalary" className="block text-sm font-medium text-gray-700">
+        Maximum Salary
+      </label>
+      <Input
+        id="maxSalary"
+        name="maxSalary"
+        placeholder="Maximum Salary (e.g., 100000)"
+        value={formData.maxSalary}
+        onChange={handleInputChange}
+        className="w-full p-2 border border-gray-300 rounded"
+      />
+    </div>
+  
+    </div>
+    {errors.salaryRange && <p className="text-red-500  ">{errors.salaryRange}</p>}
+
 
   <div className="mb-4">
     <label htmlFor="description" className="block text-sm font-medium text-gray-700">
@@ -218,6 +327,7 @@ export function RecruiterDashboard() {
       onChange={handleInputChange}
       className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primaryRed focus:border-transparent rounded"
     />
+    {errors.description && <p className="text-red-500 mt-2">{errors.description}</p>}
   </div>
 
   <div className="mb-4">
@@ -232,19 +342,33 @@ export function RecruiterDashboard() {
       onChange={handleInputChange}
       className="w-full p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primaryRed focus:border-transparent rounded"
     />
+    {errors.deadline && <p className="text-red-500 mt-2">{errors.deadline}</p>}
   </div>
 
   <div className="flex justify-end space-x-2">
     <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
       Cancel
     </Button>
-    <Button onClick={handlePostJob}>
+    <Button onClick={handlePostJob}
+    disabled={loading}
+    >
       {loading ? 'Posting...' : 'Post Job'}
     </Button>
   </div>
 </div>
 
         </Modal>
+
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-gray-900">Job Listings</h1>
+          <Button onClick={() => setIsModalOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Post New Job
+          </Button>
+        </div>
+
+
 
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
@@ -274,15 +398,23 @@ export function RecruiterDashboard() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {jobs.map((job) => (
-            <JobCard
-              key={job._id}
-              job={job}
-              onJobDelete={fetchJobs}
-              showActions={false}
-            />
-          ))}
-        </div>
+  {jobs.length > 0 ? (
+    jobs.map((job) => (
+      <JobCard
+        key={job._id}
+        job={job}
+        onJobDelete={fetchJobs}
+        onJobUpdate={fetchJobs}
+        showActions={false}
+      />
+    ))
+  ) : (
+    <div className="text-center">
+      <h1 className="text-2xl font-bold text-gray-900">No Jobs Found</h1>
+    </div>
+  )}
+</div>
+
       </div>
     </DashboardLayout>
   );
